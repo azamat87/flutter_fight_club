@@ -65,7 +65,10 @@ class MyHomePageState extends State<MyHomePage> {
                         child: SizedBox(
                           width: double.infinity,
                           child: Center(
-                            child: Text(text),
+                            child: Text(text,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(color: FightClubColors.darkGreyText),
+                            ),
                           ),
                         ),
                     ),
