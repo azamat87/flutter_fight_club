@@ -91,13 +91,22 @@ class MyHomePageState extends State<MyHomePage> {
         ));
   }
 
-  void _updateText() {
+  void _updateText(bool enemyLoseLife, bool youLoseLife, BodyPart attackingBodyPart, BodyPart whatEnemyAttacks) {
     if (yourLives == 0 && enemyLives == 0) {
       text = "Draw";
     } else if (yourLives == 0) {
       text = "You lost";
     } else if (enemyLives == 0) {
       text =  "You won";
+    } else {
+      String first = enemyLoseLife
+          ? "You hit enemy’s ${attackingBodyPart.name.toLowerCase()}."
+          : "Your attack was blocked.";
+
+      String second = youLoseLife
+          ? "Enemy hit your ${whatEnemyAttacks.name.toLowerCase()}."
+          : "Enemy’s attack was blocked.";
+      text = "$first\n$second";
     }
   }
 
@@ -125,19 +134,13 @@ class MyHomePageState extends State<MyHomePage> {
         final bool youLoseLife = defendingBodyPart != whatEnemyAttacks;
         if (enemyLoseLife) {
           enemyLives -= 1;
-          text += "You hit enemy’s ${attackingBodyPart?.name}.\n";
-        } else {
-          text += "Your attack was blocked.\n";
         }
 
         if (youLoseLife) {
           yourLives -= 1;
-          text += "Enemy hit your ${whatEnemyAttacks?.name}.\n";
-        } else {
-          text += "Enemy’s attack was blocked.\n";
         }
 
-        _updateText();
+        _updateText(enemyLoseLife, youLoseLife, attackingBodyPart!, whatEnemyAttacks);
 
         whatEnemyDefends = BodyPart.random();
         whatEnemyAttacks = BodyPart.random();
@@ -410,7 +413,7 @@ class LivesWidget extends StatelessWidget {
         children: List.generate(overallLivesCount, (index) {
           if (index < currentLivesCount) {
             return Padding(
-              padding: const EdgeInsets.only(top: 4),
+              padding: EdgeInsets.only(bottom: index < overallLivesCount - 1 ? 4 : 0),
               child: Image.asset(
                 FightClubIcons.heartFull,
                 width: 18,
@@ -419,7 +422,7 @@ class LivesWidget extends StatelessWidget {
             );
           } else {
             return Padding(
-              padding: const EdgeInsets.only(top: 4),
+              padding: EdgeInsets.only(bottom: index < overallLivesCount - 1 ? 4 : 0),
               child: Image.asset(
                 FightClubIcons.heartEmpty,
                 width: 18,
