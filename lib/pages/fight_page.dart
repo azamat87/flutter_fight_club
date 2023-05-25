@@ -5,6 +5,7 @@ import 'package:flutter_fight_club/fight_result.dart';
 import 'package:flutter_fight_club/resources/fight_club_colors.dart';
 import 'package:flutter_fight_club/resources/fight_club_icons.dart';
 import 'package:flutter_fight_club/resources/fight_club_images.dart';
+import 'package:flutter_fight_club/resources/fight_club_preference_key.dart';
 import 'package:flutter_fight_club/widgets/action_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -125,7 +126,10 @@ class FightPageState extends State<FightPage> {
         final FightResult? fightResult = FightResult.calculateResult(yourLives, enemyLives);
         if (fightResult != null) {
           SharedPreferences.getInstance().then((sharedPreferences) {
-            sharedPreferences.setString("last_fight_result", fightResult.result);
+            sharedPreferences.setString(PreferenceKey.lastFightResult, fightResult.result);
+            final String key = "stats_${fightResult.result.toLowerCase()}";
+            final int currentValue = sharedPreferences.getInt(key) ?? 0;
+            sharedPreferences.setInt(key, currentValue + 1);
           });
         }  
 
